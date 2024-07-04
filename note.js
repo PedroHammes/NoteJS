@@ -29,10 +29,10 @@ function menu() {
                             createNote()
                             break;
                         case '3':
-                            console.log("Lendo nota...")
+                            readNote()
                             break;
                         case '4':
-                            console.log("Excluindo nota...")
+                            deleteNote()
                             break;
                         case '5':
                             console.log("Encerrando NoteJS...")
@@ -90,6 +90,57 @@ function createNote() {
 
             rl.close()
         })
+    })
+
+}
+
+function readNote() {
+    console.clear()
+    console.log("--------------------")
+    console.log("Leia notas")
+    console.log("--------------------")
+
+    const notes = fs.readdirSync(path.join(__dirname, './notes'))       //[ 'Hello world!.txt', 'nota.txt' ]
+    listNotes()
+
+    rl.question('Informe o índice da nota que deseja ler: ', (index) => {
+        try {
+            console.log('\n' + fs.readFileSync(path.join(__dirname, `./notes/${notes[index-1]}`)) + '\n')       //...NoteJS/notes/nota a ser lida
+        } catch (error) {
+            console.log('Erro ao ler nota: ', error.message)
+        }
+    })
+
+}
+
+function deleteNote() {
+    console.clear()
+    console.log("--------------------")
+    console.log("Exclua uma notas")
+    console.log("--------------------")
+
+    listNotes()
+    const notes = fs.readdirSync(path.join(__dirname, './notes'))       //[ 'Hello world!.txt', 'nota.txt' ]
+
+    rl.question('Informe o índice da nota a ser excluída: ', (index) =>{
+        try {
+            const noteToDelete = path.join(__dirname, `./notes/${notes[index-1]}`)
+
+            rl.question(`A nota '${path.basename(noteToDelete)} será exluída.\nDeseja continuar? (s/n): `, (answer) => {
+                if (answer.trim().toLowerCase === 'n') {
+                    return console.log(`Operação cancelada pelo usuário.\nA nota ${noteToDelete} não foi excluída.`)
+                }
+                fs.unlink(noteToDelete, (error) => {
+                    if (error) {
+                        console.log('Erro ao deletar nota: ', error.message)
+                    }
+                    console.log(`Nota ${path.basename(noteToDelete)} foi excluída com sucesso!`)
+                })
+            })
+
+        } catch (error) {
+            console.log('Erro ao excluir nota: ', error.message)
+        }
     })
 
 }
