@@ -5,6 +5,9 @@ const rl = readline.createInterface({
     output: process.stdout
 })
 
+const fs = require("node:fs")
+const path = require("node:path")
+
 function menu() {
     console.log("--------------------")
     console.log("NotesJS v1.0")
@@ -19,7 +22,7 @@ function menu() {
 
                     switch (option) {
                         case '1':
-                            console.log("Exibindo notas...")
+                            listNotes()
                             break;
                         case '2':
                             console.log("Criando nova nota...")
@@ -39,6 +42,24 @@ function menu() {
 
                 }
     )
+}
+
+function listNotes() {
+    console.clear()
+    console.log("--------------------")
+    console.log("Exibindo notas")
+    console.log("--------------------")
+
+    const notes = fs.readdirSync(path.join(__dirname, './notes'))
+    
+    if (notes.length == 0) {
+        console.log("A pasta notes está vazia. Crie sua primeira nota para vê-la aqui.")
+    } else {
+        notes.forEach((note, index) => {
+            console.log(`${index+1}. ${note}`)
+        })
+    }
+
 }
 
 menu()
