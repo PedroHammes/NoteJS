@@ -10,6 +10,7 @@ const path = require("node:path")
 const { error } = require("node:console")
 
 function menu() {
+    console.clear()
     console.log("--------------------")
     console.log("NotesJS v1.0")
     console.log("--------------------")
@@ -24,18 +25,32 @@ function menu() {
                     switch (option) {
                         case '1':
                             listNotes()
+                            rl.question('\nDeseja continuar? (s/n): ', (answer) => {
+                                nextAction(answer)
+                            })
                             break;
                         case '2':
                             createNote()
+                            // rl.question('\nDeseja continuar? (s/n): ', (answer) => {
+                            //     nextAction(answer)
+                            // })
                             break;
                         case '3':
                             readNote()
+                            rl.question('\nDeseja continuar? (s/n): ', (answer) => {
+                                nextAction(answer)
+                            })
                             break;
                         case '4':
                             deleteNote()
+                            // rl.question('\nDeseja continuar? (s/n): ', (answer) => {
+                            //     nextAction(answer)
+                            // })
                             break;
                         case '5':
-                            console.log("Encerrando NoteJS...")
+                            console.log("Encerrando NoteJS...");
+                            process.exit(1)
+                            break;
                         default:
                             console.log("Opção inválida! Tente novamente.")
                             break;
@@ -60,7 +75,6 @@ function listNotes() {
             console.log(`${index+1}. ${note}`)
         })
     }
-
 }
 
 function createNote() {
@@ -80,18 +94,20 @@ function createNote() {
                 fs.writeFile(`${notes_path}/${note_name}.txt`, note_content, 'utf-8', (error) => {   //cria a nota usando template literal (caminho absoluto até aqui/arquivo.extensão), conteúdo do arquivo
                     if (error) {
                         console.log('Erro ao ESCREVER conteúdo: ', error.message)
+                        menu()
                     }
                     console.log(`Nota (${note_name}) criada com sucesso!`)
+                    rl.question('\nDeseja continuar? (s/n): ', (answer) => {
+                        nextAction(answer)
+                    })
                 })
 
             } catch (error) {
                 console.log("Erro ao CRIAR a nota: ", error.message)
+                menu()
             }
-
-            rl.close()
         })
     })
-
 }
 
 function readNote() {
@@ -110,7 +126,6 @@ function readNote() {
             console.log('Erro ao ler nota: ', error.message)
         }
     })
-
 }
 
 function deleteNote() {
@@ -126,7 +141,7 @@ function deleteNote() {
         try {
             const noteToDelete = path.join(__dirname, `./notes/${notes[index-1]}`)
 
-            rl.question(`A nota '${path.basename(noteToDelete)} será exluída.\nDeseja continuar? (s/n): `, (answer) => {
+            rl.question(`A nota '${path.basename(noteToDelete)}' será exluída.\nDeseja continuar? (s/n): `, (answer) => {
                 if (answer.trim().toLowerCase === 'n') {
                     return console.log(`Operação cancelada pelo usuário.\nA nota ${noteToDelete} não foi excluída.`)
                 }
@@ -135,6 +150,9 @@ function deleteNote() {
                         console.log('Erro ao deletar nota: ', error.message)
                     }
                     console.log(`Nota ${path.basename(noteToDelete)} foi excluída com sucesso!`)
+                    rl.question('\nDeseja continuar? (s/n): ', (answer) => {
+                        nextAction(answer)
+                    })
                 })
             })
 
@@ -142,7 +160,14 @@ function deleteNote() {
             console.log('Erro ao excluir nota: ', error.message)
         }
     })
+}
 
+function nextAction(action) {
+    if (action.trim().toLowerCase() === 's') {
+        menu()
+    } else {
+        process.exit(0)
+    }
 }
 
 menu()
