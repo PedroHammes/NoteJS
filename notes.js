@@ -7,6 +7,7 @@ const rl = readline.createInterface({
 
 const fs = require("node:fs")
 const path = require("node:path")
+const { error } = require("node:console")
 
 function menu() {
     console.log("--------------------")
@@ -25,7 +26,7 @@ function menu() {
                             listNotes()
                             break;
                         case '2':
-                            console.log("Criando nova nota...")
+                            createNote()
                             break;
                         case '3':
                             console.log("Lendo nota...")
@@ -59,6 +60,37 @@ function listNotes() {
             console.log(`${index+1}. ${note}`)
         })
     }
+
+}
+
+function createNote() {
+    console.clear()
+    console.log("--------------------")
+    console.log("Nova nota")
+    console.log("--------------------")
+
+    const notes_path = path.join(__dirname, './notes') //   .../NoteJS/notes 
+
+
+    rl.question("Informe o nome da nota: ", (note_name) => {        //captura o nome da nota como note_name
+        rl.question("Conteúdo da nota: \n", (note_content) => {     //captura o conteudo da nota com note_content
+            
+            try {
+                
+                fs.writeFile(`${notes_path}/${note_name}.txt`, note_content, 'utf-8', (error) => {   //cria a nota usando template literal (caminho absoluto até aqui/arquivo.extensão), conteúdo do arquivo
+                    if (error) {
+                        console.log('Erro ao ESCREVER conteúdo: ', error.message)
+                    }
+                    console.log(`Nota (${note_name}) criada com sucesso!`)
+                })
+
+            } catch (error) {
+                console.log("Erro ao CRIAR a nota: ", error.message)
+            }
+
+            rl.close()
+        })
+    })
 
 }
 
