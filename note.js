@@ -31,9 +31,6 @@ function menu() {
                             break;
                         case '2':
                             createNote()
-                            // rl.question('\nDeseja continuar? (s/n): ', (answer) => {
-                            //     nextAction(answer)
-                            // })
                             break;
                         case '3':
                             readNote()
@@ -43,9 +40,6 @@ function menu() {
                             break;
                         case '4':
                             deleteNote()
-                            // rl.question('\nDeseja continuar? (s/n): ', (answer) => {
-                            //     nextAction(answer)
-                            // })
                             break;
                         case '5':
                             console.log("Encerrando NoteJS...");
@@ -116,7 +110,7 @@ function readNote() {
     console.log("Leia notas")
     console.log("--------------------")
 
-    const notes = fs.readdirSync(path.join(__dirname, './notes'))       //[ 'Hello world!.txt', 'nota.txt' ]
+    const notes = fs.readdirSync(path.join(__dirname, './notes'))       // Salva as notas dentro de notes como um array
     listNotes()
 
     rl.question('Informe o índice da nota que deseja ler: ', (index) => {
@@ -135,7 +129,7 @@ function deleteNote() {
     console.log("--------------------")
 
     listNotes()
-    const notes = fs.readdirSync(path.join(__dirname, './notes'))       //[ 'Hello world!.txt', 'nota.txt' ]
+    const notes = fs.readdirSync(path.join(__dirname, './notes'))       // Salva as notas dentro de notes como um array
 
     rl.question('Informe o índice da nota a ser excluída: ', (index) =>{
         try {
